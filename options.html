@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PromptLens — Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #080c14;
+      --surface: #0e1420;
+      --border: #1e2a3a;
+      --accent: #63b3ed;
+      --accent2: #76e4f7;
+      --text: #e2e8f0;
+      --muted: #718096;
+      --success: #68d391;
+      --error: #fc8181;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Syne', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      overflow-x: hidden;
+    }
+
+    /* Ambient background glow */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      width: 800px; height: 600px;
+      background: radial-gradient(ellipse, rgba(99,179,237,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      position: relative;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .logo-icon {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, #1a2744, #0e1a2e);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 0 30px rgba(99,179,237,0.15);
+    }
+
+    .logo-text {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .tagline {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.3px;
+    }
+
+    /* Card */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px;
+      margin-bottom: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(99,179,237,0.3), transparent);
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+
+    /* Steps */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .step-num {
+      width: 22px; height: 22px;
+      background: rgba(99,179,237,0.1);
+      border: 1px solid rgba(99,179,237,0.25);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .step a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .step a:hover { text-decoration: underline; }
+
+    /* Input */
+    .input-wrap {
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .input-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .input-field {
+      width: 100%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-field:focus {
+      border-color: rgba(99,179,237,0.5);
+      box-shadow: 0 0 0 3px rgba(99,179,237,0.08);
+    }
+
+    .input-field::placeholder { color: var(--muted); }
+
+    /* Button */
+    .btn-save {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #2b6cb0, #2c7a9e);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: opacity 0.2s, transform 0.1s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-save::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+    }
+
+    .btn-save:hover { opacity: 0.9; }
+    .btn-save:active { transform: scale(0.99); }
+
+    /* Status message */
+    .status {
+      font-size: 13px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin-top: 12px;
+      display: none;
+    }
+    .status.success {
+      display: block;
+      background: rgba(104,211,145,0.1);
+      border: 1px solid rgba(104,211,145,0.25);
+      color: var(--success);
+    }
+    .status.error {
+      display: block;
+      background: rgba(252,129,129,0.1);
+      border: 1px solid rgba(252,129,129,0.25);
+      color: var(--error);
+    }
+
+    /* How to use */
+    .howto {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .howto-item {
+      flex: 1;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .howto-icon { font-size: 22px; margin-bottom: 8px; }
+    .howto-text { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+    /* Coffee */
+    .coffee-card {
+      background: linear-gradient(135deg, #1a1208, #120e05);
+      border: 1px solid #3d2e0a;
+      border-radius: 20px;
+      padding: 28px 36px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .coffee-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(251,191,36,0.3), transparent);
+    }
+
+    .coffee-card:hover {
+      border-color: rgba(251,191,36,0.4);
+      transform: translateY(-1px);
+    }
+
+    .coffee-emoji { font-size: 38px; flex-shrink: 0; }
+
+    .coffee-text {}
+    .coffee-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fbbf24;
+      margin-bottom: 4px;
+    }
+    .coffee-sub {
+      font-size: 13px;
+      color: #92400e;
+      line-height: 1.4;
+    }
+
+    .coffee-arrow {
+      margin-left: auto;
+      color: #fbbf24;
+      font-size: 20px;
+      opacity: 0.6;
+      flex-shrink: 0;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 12px;
+      color: #2d3748;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="header">
+      <div class="logo">
+        <div class="logo-icon">🔍</div>
+        <span class="logo-text">PromptLens</span>
+      </div>
+      <p class="tagline">Right-click any image → instant AI prompt JSON</p>
+    </div>
+
+    <!-- API Key Card -->
+    <div class="card">
+      <div class="card-title">Configuration</div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div>Create a free account on <a href="https://openrouter.ai" target="_blank">OpenRouter.ai</a> — no credit card required to start</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div>Go to <a href="https://openrouter.ai/keys" target="_blank">openrouter.ai/keys</a> and generate a new API key</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div>Paste it below. Cost: ~$0.005 per image analysis</div>
+        </div>
+      </div>
+
+      <label class="input-label" for="apiKey">OpenRouter API Key</label>
+      <div class="input-wrap">
+        <input
+          type="password"
+          id="apiKey"
+          class="input-field"
+          placeholder="sk-or-v1-..."
+          autocomplete="off"
+          spellcheck="false"
+        >
+      </div>
+
+      <button class="btn-save" onclick="saveKey()">Save API Key</button>
+      <div id="status" class="status"></div>
+    </div>
+
+    <!-- How to use -->
+    <div class="card">
+      <div class="card-title">How to use</div>
+      <div class="howto">
+        <div class="howto-item">
+          <div class="howto-icon">🖱️</div>
+          <div class="howto-text">Right-click on any image on any website</div>
+        </div>
+        <div class="howto-item">
+          <div class="howto-icon">🔍</div>
+          <div class="howto-text">Select "PromptLens — Generate JSON Prompt"</div>
+        </div>
+        <div class="howto-item">
+          <div class="howto-icon">📋</div>
+          <div class="howto-text">JSON prompt is copied to your clipboard instantly</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buy Me a Coffee -->
+    <a href="https://buymeacoffee.com/vale71" target="_blank" class="coffee-card">
+      <div class="coffee-emoji">☕</div>
+      <div class="coffee-text">
+        <div class="coffee-title">Buy me a coffee</div>
+        <div class="coffee-sub">If PromptLens saves you time, a coffee keeps it alive. Thank you!</div>
+      </div>
+      <div class="coffee-arrow">→</div>
+    </a>
+
+    <div class="footer">PromptLens v1.0 — Made with ❤️ and too much coffee</div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
