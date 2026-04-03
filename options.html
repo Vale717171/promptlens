@@ -360,7 +360,10 @@
         >
       </div>
 
-      <button class="btn-save" onclick="saveKey()">Save API Key</button>
+      <div style="display:flex;gap:10px;">
+        <button class="btn-save" onclick="saveKey()" style="flex:1;">Save API Key</button>
+        <button class="btn-save" onclick="clearKey()" style="flex:0 0 auto;width:120px;background:linear-gradient(135deg,#742a2a,#9b2c2c);">Clear Key</button>
+      </div>
       <div id="status" class="status"></div>
     </div>
 
@@ -393,7 +396,7 @@
       <div class="coffee-arrow">→</div>
     </a>
 
-    <div class="footer">PromptLens v1.0 — Made with ❤️ and too much coffee</div>
+    <div class="footer">PromptLens v1.1 — Made with ❤️ and too much coffee</div>
   </div>
 
   <script src="options.js"></script>

@@ -14,6 +14,8 @@ const SYSTEM_PROMPT = `Analyze this image and return ONLY a valid JSON object (n
   "tags": ["tag1", "tag2", "tag3"]
 }`;
 
+let isProcessing = false;
+
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: "analyze-image",
@@ -27,29 +29,45 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   const imageUrl = info.srcUrl;
   if (!imageUrl) return;
 
+  if (isProcessing) {
+    await injectAndSend(tab.id, { type: "STATUS", text: "⏳ Already processing an image, please wait..." });
+    return;
+  }
+
   // Check API key
   const { apiKey } = await chrome.storage.sync.get("apiKey");
   if (!apiKey) {
-    sendToTab(tab.id, {
+    await injectAndSend(tab.id, {
       type: "ERROR",
-      text: "❌ API key mancante — clicca sull'icona dell'estensione per configurarla"
+      text: "❌ API key missing — click the extension icon to configure it"
     });
     chrome.runtime.openOptionsPage();
     return;
   }
 
-  sendToTab(tab.id, { type: "STATUS", text: "⏳ Analyzing image..." });
+  isProcessing = true;
+  await injectAndSend(tab.id, { type: "STATUS", text: "⏳ Analyzing image..." });
 
   try {
     const { base64, mimeType } = await fetchImageAsBase64(imageUrl);
     const json = await callOpenRouter(base64, mimeType, apiKey);
-    sendToTab(tab.id, { type: "COPY_AND_NOTIFY", text: json });
+    await injectAndSend(tab.id, { type: "COPY_AND_NOTIFY", text: json });
   } catch (err) {
-    sendToTab(tab.id, { type: "ERROR", text: "❌ Error: " + err.message });
+    await injectAndSend(tab.id, { type: "ERROR", text: "❌ Error: " + err.message });
+  } finally {
+    isProcessing = false;
   }
 });
 
-function sendToTab(tabId, msg) {
+async function injectAndSend(tabId, msg) {
+  try {
+    await chrome.scripting.executeScript({
+      target: { tabId },
+      files: ["content.js"]
+    });
+  } catch (_) {
+    // content script may already be injected or page may not allow injection
+  }
   chrome.tabs.sendMessage(tabId, msg).catch(() => {});
 }
 
@@ -100,6 +118,6 @@ async function callOpenRouter(base64, mimeType, apiKey) {
   let cleaned = rawText.replace(/```json\s*/gi, "").replace(/```/g, "").trim();
   const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
   if (jsonMatch) cleaned = jsonMatch[0];
-  JSON.parse(cleaned);
-  return cleaned;
+  const parsed = JSON.parse(cleaned);
+  return JSON.stringify(parsed, null, 2);
 }

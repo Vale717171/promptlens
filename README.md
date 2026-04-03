@@ -4,7 +4,7 @@ A Chrome extension that turns any web image into a structured JSON prompt with o
 
 ## What it does
 
-Right-click any image in your browser, select **"Analyze image - JSON prompt"**, and get a structured JSON description copied to your clipboard, ready to use with Midjourney, Stable Diffusion, FLUX, and other AI image generators.
+Right-click any image in your browser, select **"🔍 PromptLens — Generate JSON Prompt"**, and get a structured JSON description copied to your clipboard, ready to use with Midjourney, Stable Diffusion, FLUX, and other AI image generators.
 
 The JSON includes:
 - `prompt` - detailed image description
@@ -21,7 +21,7 @@ The JSON includes:
 
 1. Install from the [Chrome Web Store](https://chromewebstore.google.com/detail/jinhmaocjgbkmhpkhaelmcoeefkcbodj)
 2. Click the extension icon and enter your [OpenRouter API key](https://openrouter.ai/keys)
-3. Right-click any image and select **"Analyze image - JSON prompt"**
+3. Right-click any image and select **"🔍 PromptLens — Generate JSON Prompt"**
 
 ## Requirements
 

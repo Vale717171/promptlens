@@ -28,6 +28,15 @@ async function saveKey() {
   status.textContent = "✅ API key saved! You can now close this tab and start using PromptLens.";
 }
 
+async function clearKey() {
+  const input = document.getElementById("apiKey");
+  const status = document.getElementById("status");
+  await chrome.storage.sync.remove("apiKey");
+  input.value = "";
+  status.className = "status success";
+  status.textContent = "🗑️ API key removed from storage.";
+}
+
 // Allow saving with Enter key
 document.addEventListener("keydown", (e) => {
   if (e.key === "Enter") saveKey();
