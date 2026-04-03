@@ -65,8 +65,9 @@ async function injectAndSend(tabId, msg) {
       target: { tabId },
       files: ["content.js"]
     });
-  } catch (_) {
-    // content script may already be injected or page may not allow injection
+  } catch (_ignore) {
+    // Safe to ignore: content script may already be injected from a previous
+    // call, or the page (e.g. chrome://) may not allow script injection.
   }
   chrome.tabs.sendMessage(tabId, msg).catch(() => {});
 }

@@ -217,6 +217,13 @@
     .btn-save:hover { opacity: 0.9; }
     .btn-save:active { transform: scale(0.99); }
 
+    .btn-row { display: flex; gap: 10px; }
+    .btn-clear {
+      flex: 0 0 auto;
+      width: 120px;
+      background: linear-gradient(135deg, #742a2a, #9b2c2c);
+    }
+
     /* Status message */
     .status {
       font-size: 13px;
@@ -360,9 +367,9 @@
         >
       </div>
 
-      <div style="display:flex;gap:10px;">
-        <button class="btn-save" onclick="saveKey()" style="flex:1;">Save API Key</button>
-        <button class="btn-save" onclick="clearKey()" style="flex:0 0 auto;width:120px;background:linear-gradient(135deg,#742a2a,#9b2c2c);">Clear Key</button>
+      <div class="btn-row">
+        <button class="btn-save" onclick="saveKey()">Save API Key</button>
+        <button class="btn-save btn-clear" onclick="clearKey()">Clear Key</button>
       </div>
       <div id="status" class="status"></div>
     </div>
