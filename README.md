@@ -1,10 +1,12 @@
 # PromptLens - Image to AI Prompt
 
-A Chrome extension that turns any web image into a structured JSON prompt with one right-click. Powered by [OpenRouter](https://openrouter.ai).
+A Chrome extension that turns web images and local image files into structured JSON prompts. Powered by [OpenRouter](https://openrouter.ai).
 
 ## What it does
 
-Right-click any image in your browser, select **"Analyze image - JSON prompt"**, and get a structured JSON description copied to your clipboard, ready to use with Midjourney, Stable Diffusion, FLUX, and other AI image generators.
+Right-click any image in your browser, select **"PromptLens — Generate JSON Prompt"**, and get a structured JSON description copied to your clipboard, ready to use with Midjourney, Stable Diffusion, FLUX, and other AI image generators.
+
+You can also click the extension icon and upload, drag-and-drop, or paste a local image from your computer. This makes PromptLens useful for screenshots, photos taken with a phone, and personal reference images.
 
 The JSON includes:
 - `prompt` - detailed image description
@@ -20,8 +22,8 @@ The JSON includes:
 ## Installation
 
 1. Install from the [Chrome Web Store](https://chromewebstore.google.com/detail/jinhmaocjgbkmhpkhaelmcoeefkcbodj)
-2. Click the extension icon and enter your [OpenRouter API key](https://openrouter.ai/keys)
-3. Right-click any image and select **"Analyze image - JSON prompt"**
+2. Click the extension icon and enter your [OpenRouter API key](https://openrouter.ai/keys) from the settings page
+3. Right-click any web image or click the extension icon to upload a local image
 
 ## Requirements
 
@@ -32,7 +34,8 @@ The JSON includes:
 
 - Your API key is stored locally in Chrome's sync storage
 - No data is collected or tracked
-- Images are sent directly to OpenRouter for analysis and nowhere else
+- Web images and local images are sent directly to OpenRouter for analysis and nowhere else
+- Local images are processed only after you explicitly choose, paste, or drop them in the popup
 
 ## Contributing
 
