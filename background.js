@@ -1,5 +1,6 @@
 const MODEL = "openrouter/auto";
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
+const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 
 const SYSTEM_PROMPT = `Analyze this image and return ONLY a valid JSON object (no markdown, no backticks, no extra text) with this exact structure:
 {
@@ -32,7 +33,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (!apiKey) {
     sendToTab(tab.id, {
       type: "ERROR",
-      text: "❌ API key mancante — clicca sull'icona dell'estensione per configurarla"
+      text: "❌ Missing API key — click the extension icon to configure PromptLens"
     });
     chrome.runtime.openOptionsPage();
     return;
@@ -49,6 +50,35 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   }
 });
 
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg?.type !== "ANALYZE_IMAGE_DATA") return;
+
+  analyzeImageData(msg)
+    .then((json) => sendResponse({ ok: true, json }))
+    .catch((err) => sendResponse({ ok: false, error: err.message }));
+
+  return true;
+});
+
+async function analyzeImageData({ base64, mimeType }) {
+  if (!base64 || typeof base64 !== "string") {
+    throw new Error("No image data received.");
+  }
+
+  if (!mimeType || !mimeType.startsWith("image/")) {
+    throw new Error("Unsupported file type. Please choose an image.");
+  }
+
+  assertBase64ImageSize(base64);
+
+  const { apiKey } = await chrome.storage.sync.get("apiKey");
+  if (!apiKey) {
+    throw new Error("Missing API key. Save your OpenRouter API key first.");
+  }
+
+  return callOpenRouter(base64, mimeType, apiKey);
+}
+
 function sendToTab(tabId, msg) {
   chrome.tabs.sendMessage(tabId, msg).catch(() => {});
 }
@@ -57,7 +87,21 @@ async function fetchImageAsBase64(url) {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`Could not download image (HTTP ${response.status})`);
   const blob = await response.blob();
+  if (blob.size > MAX_IMAGE_BYTES) {
+    throw new Error("Image is too large. Please use an image under 10 MB.");
+  }
   const mimeType = blob.type || "image/jpeg";
+  return { base64: await blobToBase64(blob), mimeType };
+}
+
+function assertBase64ImageSize(base64) {
+  const approximateBytes = Math.ceil((base64.length * 3) / 4);
+  if (approximateBytes > MAX_IMAGE_BYTES) {
+    throw new Error("Image is too large. Please use an image under 10 MB.");
+  }
+}
+
+async function blobToBase64(blob) {
   const arrayBuffer = await blob.arrayBuffer();
   const bytes = new Uint8Array(arrayBuffer);
   let binary = "";
@@ -65,7 +109,7 @@ async function fetchImageAsBase64(url) {
   for (let i = 0; i < bytes.length; i += chunkSize) {
     binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
   }
-  return { base64: btoa(binary), mimeType };
+  return btoa(binary);
 }
 
 async function callOpenRouter(base64, mimeType, apiKey) {
@@ -87,7 +131,7 @@ async function callOpenRouter(base64, mimeType, apiKey) {
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${apiKey}`,
-      "HTTP-Referer": "https://github.com/promptlens",
+      "HTTP-Referer": "https://github.com/Vale717171/promptlens",
       "X-Title": "PromptLens"
     },
     body: JSON.stringify(body)

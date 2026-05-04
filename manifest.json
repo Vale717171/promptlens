@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "PromptLens — Image to AI Prompt",
-  "version": "1.0.0",
-  "description": "Right-click any image to generate a structured JSON prompt for AI image generators. Powered by OpenRouter.",
+  "version": "1.1.0",
+  "description": "Right-click any web image or upload a local image to generate a structured JSON prompt for AI image generators. Powered by OpenRouter.",
   "permissions": [
     "contextMenus",
     "scripting",
@@ -14,6 +14,10 @@
   ],
   "background": {
     "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "PromptLens",
+    "default_popup": "popup.html"
   },
   "content_scripts": [
     {
