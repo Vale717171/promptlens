@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PromptLens</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main class="popup-shell">
+    <header class="header">
+      <div class="brand">
+        <div class="logo-icon">🔍</div>
+        <div>
+          <h1>PromptLens</h1>
+          <p>Image to structured AI prompt</p>
+        </div>
+      </div>
+      <button id="openOptions" class="icon-button" type="button" title="Settings">⚙</button>
+    </header>
+
+    <section id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Upload or drop an image">
+      <input id="fileInput" type="file" accept="image/*" hidden>
+      <div class="drop-icon">🖼️</div>
+      <h2>Upload a local image</h2>
+      <p>Drop an image here, paste one from the clipboard, or choose a file from your computer.</p>
+      <button id="chooseFile" class="primary-button" type="button">Choose image</button>
+    </section>
+
+    <section id="previewCard" class="preview-card" hidden>
+      <img id="previewImage" alt="Selected image preview">
+      <div class="preview-meta">
+        <strong id="fileName"></strong>
+        <span id="fileMeta"></span>
+      </div>
+      <button id="analyzeButton" class="primary-button" type="button">Generate JSON prompt</button>
+      <button id="clearButton" class="secondary-button" type="button">Choose another image</button>
+    </section>
+
+    <section id="resultCard" class="result-card" hidden>
+      <div class="result-header">
+        <h2>Result</h2>
+        <button id="copyButton" class="secondary-button compact" type="button">Copy</button>
+      </div>
+      <pre id="resultText"></pre>
+    </section>
+
+    <p id="status" class="status" role="status"></p>
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>
